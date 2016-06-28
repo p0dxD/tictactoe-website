@@ -1,0 +1,29 @@
+#container-tic-tac-toe{
+	display: none;
+	// padding-top: 35px;
+	margin-top: 125px;
+}
+
+@media screen and (max-width: 500px){
+	.box {
+    width: 100px;
+    height: 100px;
+    float: left;
+}
+
+
+#container-tic-tac-toe {
+    width: 303px;
+    height: 300px;
+}
+
+.symbol {
+    padding: 0px 0px 0px 25px;
+    font-size: 85px;
+}
+
+
+.box-container {
+    width: 65%;
+}
+}
