@@ -1,7 +1,10 @@
 #container-tic-tac-toe{
-	width: 500px;
-	height: 500px;
+	// width: 500px;
+	// height: 500px;
 	margin: auto;
+	display: none;
+    margin-top: 89px;
+
 	.box:nth-child(-n+6){
 		border-bottom: 1px solid black;
 	}
@@ -32,7 +35,7 @@
 }
 
 .box-container{
-	height: 500px;
+	// height: 500px;
 	width: 50%;
     margin: auto;
 }
@@ -40,14 +43,4 @@
 .symbol {
     padding: 0px 0px 0px 55px;
     font-size: 100px;
-}
-
-table {
-    border-collapse: collapse;
-    width: 100%;
-}
-
-th, td {
-    text-align: left;
-    padding: 8px;
 }
