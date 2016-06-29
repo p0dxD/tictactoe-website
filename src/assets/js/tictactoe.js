@@ -6,6 +6,8 @@ var instance = 0;
 var f = new Array();
 var boxes = document.getElementsByClassName("box");
 var boxcontainer = document.querySelector("#container-tic-tac-toe");
+var pointsDisctributionTable = document.querySelector(".points-reference");
+var test = document.querySelector(".test");
 var submit = document.getElementById('submit-btn');
 var playAgain = document.getElementById('play-again');
 var radiooptions = document.getElementsByName('player-start-options');
@@ -21,7 +23,7 @@ var table_headings = ["Player", "Points", "Wins", "Ties", "Loses"];
 boxcontainer.addEventListener("click", clickEvents, false);
 submit.addEventListener("click", submitAction, false);
 playAgain.addEventListener("click", clearBoard, false);
-
+test.addEventListener("click",openStatsRef,false);
 
 /*Main class which dictates what the player can do*/
 class Player{
@@ -343,6 +345,18 @@ function clearArray(){
  			}
 	}
 }
+
+
+function openStatsRef(){
+	console.log("clicking");
+	pointsDisctributionTable.classList.add("open-points-reference");
+}
+
+var main = document.querySelector('.box-container');
+
+      main.addEventListener('click', function() {
+        pointsDisctributionTable.classList.remove('open-points-reference');
+      });
 // typed arrays like int float, or something
 //classes
 // new methods numbers, lamda type expressions 
@@ -356,4 +370,4 @@ function clearArray(){
 //string interpolation
 //instead of 
 //message "this " + this.name + " something."
-	//does "this  ${this.name}  something"
+//does "this  ${this.name}  something"
