@@ -8,6 +8,7 @@ var boxes = document.getElementsByClassName("box");
 var boxcontainer = document.querySelector("#container-tic-tac-toe");
 var pointsDisctributionTable = document.querySelector(".points-reference");
 var test = document.querySelector(".test");
+var reference_list = document.querySelector("#points-reference-list");
 var submit = document.getElementById('submit-btn');
 var playAgain = document.getElementById('play-again');
 var radiooptions = document.getElementsByName('player-start-options');
@@ -16,8 +17,9 @@ var table = document.getElementsByClassName("table");
 var table_body = document.getElementsByClassName("table-body");
 var table_head = document.getElementsByClassName("table-head");
 var table_headings = ["Player", "Points", "Wins", "Ties", "Loses"];
-
-
+var main = document.querySelector('.box-container');
+var html = document.querySelector('html');
+var isSaved = false;
 
 /*Event handlers*/
 boxcontainer.addEventListener("click", clickEvents, false);
@@ -25,6 +27,8 @@ submit.addEventListener("click", submitAction, false);
 playAgain.addEventListener("click", clearBoard, false);
 test.addEventListener("click",openStatsRef,false);
 
+
+createArray(3,3);
 /*Main class which dictates what the player can do*/
 class Player{
 	constructor(name){
@@ -126,6 +130,8 @@ class Human extends Player{
 			return false;
 		}
 		if((f[x-1][y-1] !== 'x') && (f[x-1][y-1] !== 'o')){
+			console.log("NO SHAPE" + f[x-1][y-1] + " x " + x+ " y " + y);
+
 			f[x-1][y-1] = shape;
 			spotsLeft--;
 			div.querySelector('.symbol').innerHTML = 'x';;
@@ -137,7 +143,14 @@ class Human extends Player{
 	}
 }
 
-
+	function createArray(iMax, jMax){
+	for (let i = 0; i < iMax; i++) {
+ 		f[i]=new Array();
+ 		for (let j=0; j < jMax; j++) {
+  			f[i][j]=0;
+ 			}
+		}
+	}
 /*Main class with game options*/
 class Game{
 	/*Default Constructor*/
@@ -255,12 +268,14 @@ for (let i = 0, length = radiooptions.length; i < length; i++) {
 }
 }
 
+
 /*Starts a new game*/
 function startGame(whoStarts){
 	//initialize players
 	human = new Human("Jose");
 	computer = new Computer();
-	game = Game.getInstance();
+	loadCurrentState();
+
 
 	switch(whoStarts){
 		case "computer":
@@ -275,7 +290,10 @@ function startGame(whoStarts){
 	table[0].classList.remove("hide");
 	boxcontainer.style.display = "block";
 	form.style.display = "none";
+	// console.log("saving current state");
+	// saveCurrentState();
 }
+
 
 /*refreshes table*/
 function updateTable(){
@@ -310,7 +328,6 @@ function updateTable(){
 			}
 			table_body[0].appendChild(tr);
 	}
-
 }
 
 
@@ -330,8 +347,7 @@ function clearBoard(){
 		let sym = document.createElement('div');
 		sym.className = "symbol";
 		dv.appendChild(sym);
-		boxcontainer.appendChild(dv);
-		
+		boxcontainer.appendChild(dv);	
 	}
 	//give container clickable capability
 	boxcontainer.addEventListener("click", clickEvents, false);
@@ -346,18 +362,119 @@ function clearArray(){
 	}
 }
 
-
+/*opens the reference box to see points*/
 function openStatsRef(){
-	console.log("clicking");
 	pointsDisctributionTable.classList.add("open-points-reference");
+	reference_list.classList.remove("hide");
 }
 
-var main = document.querySelector('.box-container');
-
-      main.addEventListener('click', function() {
+main.addEventListener('click', function() {
         pointsDisctributionTable.classList.remove('open-points-reference');
-      });
-// typed arrays like int float, or something
+        reference_list.classList.add("hide");
+});
+
+form.addEventListener('click', function() {
+        pointsDisctributionTable.classList.remove('open-points-reference');
+        reference_list.classList.add("hide");
+});
+pointsDisctributionTable.addEventListener('click', function() {
+        pointsDisctributionTable.classList.remove('open-points-reference');
+        reference_list.classList.add("hide");
+});
+
+
+/*saves the current board and the state*/
+function saveCurrentState(){
+	if (typeof(Storage) !== "undefined") {
+		console.log("Local storage");
+		let count = 0;
+    	// Code for localStorage/sessionStorage.
+    	let str = "";
+ 		console.log("---Board---");
+    	for (let i = 0; i < 3; i++) {
+ 			for (let j=0; j < 3; j++) {
+ 				// console.log("about to save values" + f[i][j]);
+ 				if(f[i][j] !== undefined){
+ 					// console.log("saving value of " + f[i][j]);
+  				localStorage.setItem(count++,f[i][j]);
+
+  				// str += localStorage.getItem(count++);
+  			}
+		}
+	}
+
+
+	}else {
+		console.log("Sorry not supported");
+    	// Sorry! No Web Storage support..
+	}
+}
+
+
+
+
+function loadCurrentState(){
+	let zeros = 0;
+	let state = localStorage.getItem("save");
+
+	if(state){
+		console.log("saved");
+		
+	    for (let i = 0; i < 3; i++) {
+ 			for (let j=0; j < 3; j++) {
+ 				if(localStorage.getItem(zeros)!== undefined){
+
+  					f[i][j] = localStorage.getItem(zeros);
+  					
+  			// 		x = (zeros <= 2)? 1: ((zeros <= 5)? 2: 3 );
+					// y = (zeros%3);
+
+
+					// console.log(x + "= x y =" + y + " "+boxes.length + " " + ((x*3)-1)+y);
+					if(f[i][j] === "o"){
+						boxes[zeros].querySelector('.symbol').innerHTML = 'o';
+						boxes[zeros].classList.add("green-box");
+					}else if(f[i][j] === "x"){
+						boxes[zeros].querySelector('.symbol').innerHTML = 'x';
+						boxes[zeros].classList.add("blue-box");
+					}	
+
+					console.log("Got "+f[i][j] +" "+ zeros++);
+  					// if(localStorage.getItem((zeros)) === 0){
+  					// 	zeros++;
+  					// }
+  				}
+ 			}
+		}
+	}else{
+		console.log("First time");
+		game = Game.getInstance();
+		createArray();
+	}
+
+ 			for(let i = 0; i < 3; i++){
+				for(let j = 0; j < 3; j ++){
+					console.log("GOT "+f[i][j]);
+				}
+			}
+
+
+	return (zeros === 9);
+}
+
+
+window.onbeforeunload = function(e) {
+	saveCurrentState();
+  var dialogText = 'Dialog text here';
+  e.returnValue = dialogText;
+  console.log(dialogText);
+  isSaved = true;
+  localStorage.setItem("save", isSaved);
+  return dialogText;
+};
+
+
+//typed arrays like int float, or something
 //classes
 // new methods numbers, lamda type expressions 
 //symbol creation , make them constants
